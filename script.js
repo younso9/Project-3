@@ -259,6 +259,26 @@ $payment.change(() => {
 
 //**************************** FORM VALIDATION FUNCTIONS AND EVENTS *****************************//
 
+    const validationCreditCardNumber = () => {
+    const validSizeMin = 13;
+    const validSizeMax = 16;
+        
+        const ccNumberVal = $()
+        
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
 
 
 
