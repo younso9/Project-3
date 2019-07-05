@@ -45,7 +45,7 @@ let teeShirtColor = false;
 
 
 $('#design').on('change', function () {
-
+    $('#color').html('');
     if ($(this).val() === "js puns") {
         $('#colors-js-puns').show();
 
@@ -77,7 +77,7 @@ $('#design').on('change', function () {
     }
 
 
-})
+});
 
 
 //**************************** ACTIVITY SECTION *****************************
@@ -259,488 +259,225 @@ $payment.change(() => {
 
 //**************************** FORM VALIDATION FUNCTIONS AND EVENTS *****************************//
 
-    const validationCreditCardNumber = () => {
-    const validSizeMin = 13;
-    const validSizeMax = 16;
-        
-        const ccNumberVal = $()
-        
 
+// Creates, Appends and Hides all error messages. (Errors are hidden by default)
 
+$('label[for="name"]').before('<label class="error" id="name-error"><font color="white">Please Enter Your Name. This field can not be Empty.</font></label>');
+$('label[for="mail"]').before('<label class="error" id="email-error"><font color="white">Please enter a VALID email address.</font></label>');
+$('.activities legend').before('<label class="error" id="activity-error"><font color="white">You MUST select at least one activity.</font></label>');
+$('#credit-card').before('<label class="error" id="cc-empty-error"><font color="white">Credit Card Information Needed!</font></label>');
+$('#credit-card').before('<label class="error" id="cc-number-error"><font color="white">Please enter a valid credit card number between 13-16 digits</font></label>');
+$('#credit-card').before('<label class="error" id="cc-zip-error"><font color="white">Please enter a 5 digit ZIP code</font></label>');
+$('#credit-card').before('<label class="error" id="cc-cvv-error"><font color="white">Please enter a 3 digit CVV number</font></label>');
+$('.error').hide();
 
+// Name validation function to test for valid name input - Error message will appear if user entry is not valid.
 
-
+const validName = (name) => {
+    let valid = /^\S/.test(name);                                       
+    if (valid) {
+        $('#name-error').hide();                                        
+        return true;
+    } else {
+        $('#name-error').show();                                   
+        return false;
+    }
 }
 
+// Real-time name validation to listen for valid name input.  If name field is left empty an error message will produced.
+
+$('#name').on('input', (e) => {                                        
+    if ($('#name').val() == '') {                                        
+        validName($('#name').val());                                      
+    } else {
+        $('#name-error').hide();                                      
+    }
+});
+
+// Email validation function to listen for valid email input.  An error message will appear if email format is invalid.
+
+const validEmail = (email) => {
+    let valid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);  
+    if (valid) {
+        $('#email-error').hide();                        
+        return true;
+    } else {
+        $('#email-error').show();                    
+        return false;
+    }
+}
+
+// Real-time validation of email to listen for valid email input.  If email field is left empty an error message will produced.
+
+$('#mail').on('input', () => {                             
+    if ($('#mail').val() !== '') {                           
+        validEmail($('#mail').val());                        
+    } else {
+        $('#email-error').hide();                         
+    }
+});
+
+// Activities validation function to hide and or show activities that are "checked".
+
+const validActivities = () => {
+
+    if ($('.activities input:checked').length > 0) {              
+        $('#activity-error').hide();                               
+        return true;
+    } else {
+        $('#activity-error').show();                           
+        return false;
+    }
+}
+
+//Real-time validation of activities is listening for input of chosen activities.
+$('.activities').on('input', () => {                     
+    validActivities();                                    
+})
+
+// Will hide errors associated with 'credit card' if any other payment option is chosen.
+
+$('#payment').on('change', function () {
+    if ($('#payment').val() === 'paypal' || $('#payment').val() === 'bitcoin') {
+        $('#cc-cvv-error').hide();
+        $('#cc-zip-error').hide();
+        $('#cc-number-error').hide();
+        $('#cc-empty-error').hide();
+    }
+});
+
+// Credit Card validation function when 'credit card' is chosen - validation will test for proper formulation of numbers.
+// Will produce an error message if field is left empty or or wrong input.
+
+const validCardNumber = (cc) => {
+    if ($('#payment').val() === 'credit card') {                     
+        let valid = /^\d{13,16}$/.test(cc);                           
+
+        if (valid) {
+            $('#cc-number-error').hide();
+            $('#cc-empty-error').hide();                             
+            return true;
+        } else if (cc !== '') {                                   
+            $('#cc-empty-error').hide();                        
+            $('#cc-number-error').show();                       
+        } else {
+            $('#cc-number-error').hide();
+            $('#cc-empty-error').show();                  
+            return false;
+        }
+    }
+}
+
+// Real-time validation of credit card listening for cc number input by user.  Will show error message if field is left empty or input wrong.
+
+$('#cc-num').on('input', () => {                          
+    if ($('#cc-num').val() !== '') {                       
+        validCardNumber($('#cc-num').val())                 
+    } else if ($('#cc-num').val() == '') {               
+        $('#cc-empty-error').show();                   
+    } else {
+        $('#cc-number-error').show();              
+    }
+});
+
+// Zip code validation function will test for proper zip code sequence.  If improper will produce an error message
+
+const validZip = (zip) => {
+    if ($('#payment').val() === 'credit card') {                
+        let valid = /^\d{5}$/.test(zip);                         
+
+        if (valid) {                                           
+            $('#cc-zip-error').hide();                          
+            return true;
+        } else {
+            $('#cc-zip-error').show();                     
+            return false;
+        }
+    }
+}
+
+// Real-time validation of zip code to listen for proper number input for zip code.  Error message produce if input invalid.
+
+$('#zip').on('input', () => {                           
+    if ($('#zip').val() !== '') {                        
+        validZip($('#zip').val());                        
+    } else {
+        $('#cc-zip-error').hide();                    
+    }
+});
+
+// Cvv validation function test for a valid three digit input for cvv code.  Error message will be produced if invalid.
+
+const validCVV = (cvv) => {
+    if ($('#payment').val() === 'credit card') {                   
+        let valid = /^\d{3}$/.test(cvv);                           
+
+        if (valid) {                                              
+            $('#cc-cvv-error').hide();                              
+            return true;
+        } else {
+            $('#cc-cvv-error').show();                         
+            return false;
+        }
+    }
+}
+
+// Real-time validation of cvv - makes sure field is not empty and input properly.  Error produced if invalid.
+
+$('#cvv').on('input', () => {                          
+    if ($('#cvv').val() !== '') {                     
+        validCVV($('#cvv').val());                    
+    } else {
+        $('#cc-cvv-error').hide();                  
+    }
+});
+
+// Checks the validity of all fields at simultaneously. 
+const isValid = () => {
+
+    // Credit Card option: Valid if all fields are input properly.
+    
+    if ($('#payment').val() === 'credit card') {
+        if (validName($('#name').val()) && validEmail($('#mail').val()) && validActivities() && validCardNumber($('#cc-num').val()) &&
+            validZip($('#zip').val()) && validCVV($('#cvv').val())) {
+            return true;                                                            
+        } else {
+            validName($('#name').val());
+            validEmail($('#mail').val());
+            validActivities();
+            validCardNumber($('#cc-num').val());
+            validZip($('#zip').val());
+            validCVV($('#cvv').val());
+            return false;                                                   
+        }
+
+    // Credit Card is not chosen: 
+        
+    } else {
+        if (validName($('#name').val()) && validEmail($('#mail').val()) && validActivities()) {
+            return true;                                                                             
+        } else {
+            validName($('#name').val());
+            validEmail($('#mail').val());
+            validActivities();
+            return false;                                                                      
+        }
+    }
+}
+
+// Submit Button: This will prevents form being submitted if errors are present.
+
+$('form').on('submit', (e) => {
+    if (isValid() === true) {
+        window.location.reload();                                                        
+
+    } else {
+        e.preventDefault();                                                            
+    }
+});
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// // EFFECTS: Compares the regEx to the input val and returns true if matched
-// //          Adds an error class and appends an error message when not matched
-// function isValidInput($input, regEx, val, message = '') {
-
-//     if (regEx.test(val)) {
-//         // Remove possible error class and error message when test passes
-//         $input.removeClass('error');
-
-//         if ($input.prev().filter('.error-message').length !== 0) {
-//             $input.prev().remove();
-
-//         }
-
-//         return true;
-//     }
-//     else {
-//         $input.addClass('error');
-
-//         // Check for empty versus malformatted input, display appropriate message
-//         if (val === '') {
-//             message = ('Please enter your ').concat(message);
-//         }
-//         else {
-//             message = 'Your ' + message + ' is formatted incorrectly'
-//         }
-
-//         // Check for existence of error message, add html to document, or change text
-//         if ($input.prev().filter('.error-message').length === 0)
-//             $input.before('<p class="error-message">' + message + '</p>');
-//         else {
-//             $input.prev().filter('.error-message').text(message);
-//         }
-
-//         return false;
-//     }
-
-// }
-
-// // EFFECTS: Checks for at least one selected (checked) activity, returns false otherwise
-// //          Handles error message adding/removing depending on check
-// function isAttendingActivity() {
-
-//     const $activities = $('.activities input');
-//     const $errorHTML = $('<p class="error-message">Please select at least one activity.</p>');
-
-//     // If there is at least 1 checked activity, returns true
-//     if ($activities.filter(':checked').length) {
-//         $('.activities > .error-message').remove();
-//         return true;
-//     }
-//     else {
-//         if ($('.activities > .error-message').length === 0)
-//             $('.activities legend').after($errorHTML);
-//         return false;
-//     }
-// }
-
-// // EFFECTS: Call this function in order to add real-time form validation
-// //          Currently only supports Name and Email input fields
-// function realtimeValidation() {
-
-//     const nameRegEx = /[a-zA-Z]{1,}/;
-
-//     const $emailInput = $('#mail');
-//     const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-//     // These listeners bind to input events, and check the validity of each input
-//     $nameInput.bind('input', () => { isValidInput($nameInput, nameRegEx, $nameInput.val(), 'name') });
-//     $emailInput.bind('input', () => { isValidInput($emailInput, emailRegEx, $emailInput.val(), 'email') });
-// }
-
-
-// // EFFECTS: Calls input validation functions and returns true if all pass
-// //          If one or more validation functions fail, the function returns false
-// function validateForm() {
-//     const nameRegEx = /[a-zA-Z]{1,}/;
-//     const nameVal = $nameInput.val();
-
-//     const $emailInput = $('#mail');
-//     const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-//     const emailVal = $emailInput.val();
-
-//     const $ccInput = $('#cc-num');
-//     const ccRegEx = /^[0-9]{13,16}$/;
-//     const ccVal = $ccInput.val();
-
-//     const $zipInput = $('#zip');
-//     const zipRegEx = /^[0-9]{5}$/;
-//     const zipVal = $zipInput.val();
-
-//     const $cvvInput = $('#cvv');
-//     const cvvRegEx = /^[0-9]{3}$/;
-//     const cvvVal = $cvvInput.val();
-
-//     let isValid = true;
-
-
-//     // Each condition calls valid check. If the check returns false, we flip the isValid flag
-//     if (!isValidInput($nameInput, nameRegEx, nameVal, 'name')) {
-//         isValid = false;
-//     }
-//     if (!isValidInput($emailInput, emailRegEx, emailVal, 'email')) {
-//         isValid = false;
-//     }
-//     if (!isAttendingActivity()) {
-//         isValid = false;
-//     }
-
-//     // Only check for credit card validation if "Credit Card" payment type is selected
-//     if ($('#payment option').filter(':selected').val() === 'credit card') {
-
-//         if (!isValidInput($ccInput, ccRegEx, ccVal, 'card number')) {
-//             isValid = false;
-//         }
-//         if (!isValidInput($zipInput, zipRegEx, zipVal, 'zip code')) {
-//             isValid = false;
-//         }
-//         if (!isValidInput($cvvInput, cvvRegEx, cvvVal, 'CVV')) {
-//             isValid = false;
-//         }
-//         realtimeValidation();
-//     }
-
-//     return isValid;
-// }
-
-// // Call the function for enabling real-time validation on the form
-// //realtimeValidation();
-
-// // Listener on form submission, validates form fields, otherwise, prevents submission
-// $('form').submit((ev) => {
-//     if (validateForm() == true) {
-//         window.location.reload();
-
-//     } else {
-//         ev.preventDefault();
-//     }
-//     return
-// });
-
-// // function register() {
-
-// //  if ($('#payment option').filter(':selected').val() === 'paypal') {
-// //      window.location.href = "https://www.paypal.com";
-// //  }
-// //  if ($('#payment option').filter(':selected').val() === 'bitcoin') {
-// //      window.location.href = "https://bitcoin.org";
-// //  }
-// // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // //$('#payment').children().eq(3).attr('selected', true);
-
-// // /*
-// // $("credit-card").siblings().eq(3).addClass("paypal");
-// // $("credit-card").siblings().eq(4).addClass("bitcoin");
-// // $('select option[value="credit card"]').attr("selected", true);
-// // $('select option[value="select_method"]').attr("disabled", true);
-// // $('select option[value="select_method"]').hide();
-// // $(".paypal").hide();
-// // $(".bitcoin").hide();
-
-
-
-// // $("payment").on('change', function () {
-// //     if ($(this).val() === "credit card") {
-// //         $("#credit-card").show();
-// //         $(".paypal").hide();
-// //         $(".bitcoin").hide();
-// //     } else if ($(this).val() === "paypal") {
-// //         $("#credit-card").hide();
-// //         $(".paypal").show();
-// //         $(".bitcoin").hide();
-// //     } else if ($(this).val() === "bitcoin") {
-// //         $("#credit-card").hide();
-// //         $(".paypal").hide();
-// //         $(".bitcoin").show();
-// //     }
-
-// // }
-
-
-
-
-
-
-
-
-// $('#payment').show();
-
-// $('#payment').children().eq(0).show();
-// $('#payment').children().eq(1).hide();
-// $('#payment').children().eq(2).hide();
-// $('#payment').children().eq(3).hide();
-// $('#payment').children().eq(0).attr('selected', true);
-
-// $('#color').children().eq(3).hide();
-// $('#color').children().eq(4).hide();
-// $('#color').children().eq(5).hide();
-
-
-
-
-// /*
-
-
-// $("#credit-card").siblings().eq(3).addClass("paypal");
-
-
-
-
-
-
-
-
-
-
-
-// function isValidInput($input, regEx, val, message = '') {
-
-//     if (regEx.test(val)) {
-//         // Remove possible error class and error message when test passes
-//         $input.removeClass('error');
-
-//         if ($input.prev().filter('.error-message').length !== 0) {
-//             $input.prev().remove();
-
-//         }
-
-//         return true;
-//     }
-//     else {
-//         $input.addClass('error');
-
-//         // Check for empty versus malformatted input, display appropriate message
-//         if (val === '') {
-//             message = ('Please enter your ').concat(message);
-//         }
-//         else {
-//             message = 'Your ' + message + ' is formatted incorrectly'
-//         }
-
-//         // Check for existence of error message, add html to document, or change text
-//         if ($input.prev().filter('.error-message').length === 0)
-//             $input.before('<p class="error-message">' + message + '</p>');
-//         else {
-//             $input.prev().filter('.error-message').text(message);
-//         }
-
-//         return false;
-//     }
-
-// }
-
-// // EFFECTS: Checks for at least one selected (checked) activity, returns false otherwise
-// //          Handles error message adding/removing depending on check
-// function isAttendingActivity() {
-
-//     const $activities = $('.activities input');
-//     const $errorHTML = $('<p class="error-message">Please select at least one activity.</p>');
-
-//     // If there is at least 1 checked activity, returns true
-//     if ($activities.filter(':checked').length) {
-//         $('.activities > .error-message').remove();
-//         return true;
-//     }
-//     else {
-//         if ($('.activities > .error-message').length === 0)
-//             $('.activities legend').after($errorHTML);
-//         return false;
-//     }
-// }
-
-// // EFFECTS: Call this function in order to add real-time form validation
-// //          Currently only supports Name and Email input fields
-// function realtimeValidation() {
-
-//     const nameRegEx = /[a-zA-Z]{1,}/;
-
-//     const $emailInput = $('#mail');
-//     const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-//     // These listeners bind to input events, and check the validity of each input
-//     $nameInput.bind('input', () => { isValidInput($nameInput, nameRegEx, $nameInput.val(), 'name') });
-//     $emailInput.bind('input', () => { isValidInput($emailInput, emailRegEx, $emailInput.val(), 'email') });
-// }
-
-
-
-
-
-
-
-
-
-
-
-// // EFFECTS: Calls input validation functions and returns true if all pass
-// //          If one or more validation functions fail, the function returns false
-// function validateForm() {
-//     const nameRegEx = /[a-zA-Z]{1,}/;
-//     const nameVal = $nameInput.val();
-
-//     const $emailInput = $('#mail');
-//     const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-//     const emailVal = $emailInput.val();
-
-//     const $ccInput = $('#cc-num');
-//     const ccRegEx = /^[0-9]{13,16}$/;
-//     const ccVal = $ccInput.val();
-
-//     const $zipInput = $('#zip');
-//     const zipRegEx = /^[0-9]{5}$/;
-//     const zipVal = $zipInput.val();
-
-//     const $cvvInput = $('#cvv');
-//     const cvvRegEx = /^[0-9]{3}$/;
-//     const cvvVal = $cvvInput.val();
-
-//     let isValid = true;
-
-//     // Each condition calls valid check. If the check returns false, we flip the isValid flag
-//     if (!isValidInput($nameInput, nameRegEx, nameVal, 'name')) {
-//         isValid = false;
-//     }
-//     if (!isValidInput($emailInput, emailRegEx, emailVal, 'email')) {
-//         isValid = false;
-//     }
-//     if (!isAttendingActivity()) {
-//         isValid = false;
-//     }
-
-//     // Only check for credit card validation if "Credit Card" payment type is selected
-//     if ($('#payment option').filter(':selected').val() === 'credit card') {
-
-//         if (!isValidInput($ccInput, ccRegEx, ccVal, 'card number')) {
-//             isValid = false;
-//         }
-//         if (!isValidInput($zipInput, zipRegEx, zipVal, 'zip code')) {
-//             isValid = false;
-//         }
-//         if (!isValidInput($cvvInput, cvvRegEx, cvvVal, 'CVV')) {
-//             isValid = false;
-//         }
-//     }
-
-//     // else if ($('#payment option').filter(':selected').val() === 'paypal') {
-//     //  isValid = false;
-
-//     // }
-
-//     // else if ($('#payment option').filter(':selected').val() === 'bitcoin') {
-//     //  isValid = false;
-
-//     // }
-//     // Return the flag, will be false if any of the tests failed
-//     return isValid;
-// }
-
-// // Call the function for enabling real-time validation on the form
-// realtimeValidation();
-
-// // Listener on form submission, validates form fields, otherwise, prevents submission
-// $('form').submit ((ev) => {
-//     if (validateForm() == true) {
-//         window.location.reload();
-
-//     } else {
-//         ev.preventDefault();
-//     }
-//     return
-// });
-
-// // function register() {
-
-// //  if ($('#payment option').filter(':selected').val() === 'paypal') {
-// //      window.location.href = "https://www.paypal.com";
-// //  }
-// //  if ($('#payment option').filter(':selected').val() === 'bitcoin') {
-// //      window.location.href = "https://bitcoin.org";
-// //  }
-// // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// /*
-
-// const updateCost = function (cost) {
-//     totalCost += 0;
-//     document.getElementById("total").innerHTML = "<p id=total><strong>Total $" + totalCost + "</strong></p>";
-
-
-// //**************************** ACTIVITY SECTION *****************************
-
-// $(jsFramework).change(function (event) {
-//     if ($(event.target).is(':checked')) {
-//         express.prop('disabled', true);
-//     } else {
-//         express.prop('disabled', false);
-//     }
-// });
-
-// $(jsLibrary).change(function (event) {
-//     if ($(event.target).is(':checked')) {
-//         node.prop('disabled', true);
-//     } else {
-//         node.prop('disabled', false);
-//     }
-// });
-
-// $(express).change(function (event) {
-//     if ($(event.target).is(':checked')) {
-//         jsFramework.prop('disabled', true);
-//     } else {
-//         jsFramework.prop('disabled', false);
-//     }
-// });
-
-// $(node).change(function (event) {
-//     if ($(event.target).is(':checked')) {
-//         jsLibrary.prop('disabled', true);
-//     } else {
-//         jsLibrary.prop('disabled', false);
-//     }
-// });
-
-
-
-
-// */
