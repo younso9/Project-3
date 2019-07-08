@@ -55,9 +55,9 @@ $('#design').change(function () {
     } else if
 
         ($(this).val() === "heart js") {
-        $('#color').append('<option value="tomato">Tomato (JS Puns shirt only)</option>');
-        $('#color').append('<option value="steelblue">Steel Blue (JS Puns shirt only)</option>');
-        $('#color').append('<option value="dimgrey">Dim Grey (JS Puns shirt only)</option>');
+        $('#color').append('<option value="tomato">Tomato (I &#9829; JS shirt only)></option>');
+        $('#color').append('<option value="steelblue">Steel Blue (I &#9829; JS shirt only)></option>');
+        $('#color').append('<option value="dimgrey">Dim Grey (I &#9829; JS shirt only)</option>');
         $('#colors-js-puns').show();
 
         teeShirtColor = true;
@@ -423,7 +423,7 @@ $('#cvv').on('input', () => {
     }
 });
 
-// Checks the validity of all fields at simultaneously. 
+// Checks the validity of all fields at simultaneously. (Sonya Script)
 const isValid = () => {
 
     // Credit Card option: Valid if all fields are input properly.
