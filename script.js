@@ -38,44 +38,35 @@ $('#colors-js-puns').hide();
 
 //************************ Display of Tshirt Colors *************************
 
-//$('#color').append('<option value="cornflowerblue">CornflowerBlue (JS Puns shirt only)</option>
-
 let teeShirtColor = false;
 
-
-
-$('#design').on('change', function () {
-    $('#color').html('');
+$('#design').change(function () {
+    $("#color").html('');
     if ($(this).val() === "js puns") {
+        $('#color').empty();
+        $('#color').append('<option value="cornflowerblue" > Cornflower Blue (JS Puns shirt only)</option>')
+        $('#color').append('<option value="darkslategrey" > Dark Slate Grey(JS Puns shirt only)</option>')
+        $('#color').append('<option value="gold">Gold (JS Puns shirt only)</option>')
         $('#colors-js-puns').show();
 
-        $('#color').children().eq(0).show();
-        $('#color').children().eq(1).show();
-        $('#color').children().eq(2).show();
-        $('#color').children().eq(0).attr('selected', true);
+        teeShirtColor = true;
+        return teeShirtColor;
 
-        $('#color').children().eq(3).hide();
-        $('#color').children().eq(4).hide();
-        $('#color').children().eq(5).hide();
+    } else if
 
-    }
-    else if ($(this).val() === "heart js") {
+        ($(this).val() === "heart js") {
+        $('#color').append('<option value="tomato">Tomato (JS Puns shirt only)</option>');
+        $('#color').append('<option value="steelblue">Steel Blue (JS Puns shirt only)</option>');
+        $('#color').append('<option value="dimgrey">Dim Grey (JS Puns shirt only)</option>');
         $('#colors-js-puns').show();
 
+        teeShirtColor = true;
+        return teeShirtColor;
 
-        $('#color').children().eq(0).hide();
-        $('#color').children().eq(1).hide();
-        $('#color').children().eq(2).hide();
-
-        $('#color').children().eq(3).show();
-        $('#color').children().eq(4).show();
-        $('#color').children().eq(5).show();
-        $('#color').children().eq(3).attr('selected', true);
-    }
-    else {
+    } else
         $('#colors-js-puns').hide();
-    }
-
+    teeShirtColor = false;
+    return teeShirtColor;
 
 });
 
@@ -163,7 +154,7 @@ const updateCost = function (cost) {
 };
 
 
-//********************************************************* */
+//***************************************************************************************************************/
 
 
 $(javFrameWork).change(function (event) {
@@ -274,46 +265,46 @@ $('.error').hide();
 // Name validation function to test for valid name input - Error message will appear if user entry is not valid.
 
 const validName = (name) => {
-    let valid = /^\S/.test(name);                                       
+    let valid = /^\S/.test(name);
     if (valid) {
-        $('#name-error').hide();                                        
+        $('#name-error').hide();
         return true;
     } else {
-        $('#name-error').show();                                   
+        $('#name-error').show();
         return false;
     }
 }
 
 // Real-time name validation to listen for valid name input.  If name field is left empty an error message will produced.
 
-$('#name').on('input', (e) => {                                        
-    if ($('#name').val() == '') {                                        
-        validName($('#name').val());                                      
+$('#name').on('input', (e) => {
+    if ($('#name').val() == '') {
+        validName($('#name').val());
     } else {
-        $('#name-error').hide();                                      
+        $('#name-error').hide();
     }
 });
 
 // Email validation function to listen for valid email input.  An error message will appear if email format is invalid.
 
 const validEmail = (email) => {
-    let valid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);  
+    let valid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
     if (valid) {
-        $('#email-error').hide();                        
+        $('#email-error').hide();
         return true;
     } else {
-        $('#email-error').show();                    
+        $('#email-error').show();
         return false;
     }
 }
 
 // Real-time validation of email to listen for valid email input.  If email field is left empty an error message will produced.
 
-$('#mail').on('input', () => {                             
-    if ($('#mail').val() !== '') {                           
-        validEmail($('#mail').val());                        
+$('#mail').on('input', () => {
+    if ($('#mail').val() !== '') {
+        validEmail($('#mail').val());
     } else {
-        $('#email-error').hide();                         
+        $('#email-error').hide();
     }
 });
 
@@ -321,18 +312,18 @@ $('#mail').on('input', () => {
 
 const validActivities = () => {
 
-    if ($('.activities input:checked').length > 0) {              
-        $('#activity-error').hide();                               
+    if ($('.activities input:checked').length > 0) {
+        $('#activity-error').hide();
         return true;
     } else {
-        $('#activity-error').show();                           
+        $('#activity-error').show();
         return false;
     }
 }
 
 //Real-time validation of activities is listening for input of chosen activities.
-$('.activities').on('input', () => {                     
-    validActivities();                                    
+$('.activities').on('input', () => {
+    validActivities();
 })
 
 // Will hide errors associated with 'credit card' if any other payment option is chosen.
@@ -350,19 +341,19 @@ $('#payment').on('change', function () {
 // Will produce an error message if field is left empty or or wrong input.
 
 const validCardNumber = (cc) => {
-    if ($('#payment').val() === 'credit card') {                     
-        let valid = /^\d{13,16}$/.test(cc);                           
+    if ($('#payment').val() === 'credit card') {
+        let valid = /^\d{13,16}$/.test(cc);
 
         if (valid) {
             $('#cc-number-error').hide();
-            $('#cc-empty-error').hide();                             
+            $('#cc-empty-error').hide();
             return true;
-        } else if (cc !== '') {                                   
-            $('#cc-empty-error').hide();                        
-            $('#cc-number-error').show();                       
+        } else if (cc !== '') {
+            $('#cc-empty-error').hide();
+            $('#cc-number-error').show();
         } else {
             $('#cc-number-error').hide();
-            $('#cc-empty-error').show();                  
+            $('#cc-empty-error').show();
             return false;
         }
     }
@@ -370,27 +361,27 @@ const validCardNumber = (cc) => {
 
 // Real-time validation of credit card listening for cc number input by user.  Will show error message if field is left empty or input wrong.
 
-$('#cc-num').on('input', () => {                          
-    if ($('#cc-num').val() !== '') {                       
-        validCardNumber($('#cc-num').val())                 
-    } else if ($('#cc-num').val() == '') {               
-        $('#cc-empty-error').show();                   
+$('#cc-num').on('input', () => {
+    if ($('#cc-num').val() !== '') {
+        validCardNumber($('#cc-num').val())
+    } else if ($('#cc-num').val() == '') {
+        $('#cc-empty-error').show();
     } else {
-        $('#cc-number-error').show();              
+        $('#cc-number-error').show();
     }
 });
 
 // Zip code validation function will test for proper zip code sequence.  If improper will produce an error message
 
 const validZip = (zip) => {
-    if ($('#payment').val() === 'credit card') {                
-        let valid = /^\d{5}$/.test(zip);                         
+    if ($('#payment').val() === 'credit card') {
+        let valid = /^\d{5}$/.test(zip);
 
-        if (valid) {                                           
-            $('#cc-zip-error').hide();                          
+        if (valid) {
+            $('#cc-zip-error').hide();
             return true;
         } else {
-            $('#cc-zip-error').show();                     
+            $('#cc-zip-error').show();
             return false;
         }
     }
@@ -398,25 +389,25 @@ const validZip = (zip) => {
 
 // Real-time validation of zip code to listen for proper number input for zip code.  Error message produce if input invalid.
 
-$('#zip').on('input', () => {                           
-    if ($('#zip').val() !== '') {                        
-        validZip($('#zip').val());                        
+$('#zip').on('input', () => {
+    if ($('#zip').val() !== '') {
+        validZip($('#zip').val());
     } else {
-        $('#cc-zip-error').hide();                    
+        $('#cc-zip-error').hide();
     }
 });
 
 // Cvv validation function test for a valid three digit input for cvv code.  Error message will be produced if invalid.
 
 const validCVV = (cvv) => {
-    if ($('#payment').val() === 'credit card') {                   
-        let valid = /^\d{3}$/.test(cvv);                           
+    if ($('#payment').val() === 'credit card') {
+        let valid = /^\d{3}$/.test(cvv);
 
-        if (valid) {                                              
-            $('#cc-cvv-error').hide();                              
+        if (valid) {
+            $('#cc-cvv-error').hide();
             return true;
         } else {
-            $('#cc-cvv-error').show();                         
+            $('#cc-cvv-error').show();
             return false;
         }
     }
@@ -424,11 +415,11 @@ const validCVV = (cvv) => {
 
 // Real-time validation of cvv - makes sure field is not empty and input properly.  Error produced if invalid.
 
-$('#cvv').on('input', () => {                          
-    if ($('#cvv').val() !== '') {                     
-        validCVV($('#cvv').val());                    
+$('#cvv').on('input', () => {
+    if ($('#cvv').val() !== '') {
+        validCVV($('#cvv').val());
     } else {
-        $('#cc-cvv-error').hide();                  
+        $('#cc-cvv-error').hide();
     }
 });
 
@@ -436,11 +427,11 @@ $('#cvv').on('input', () => {
 const isValid = () => {
 
     // Credit Card option: Valid if all fields are input properly.
-    
+
     if ($('#payment').val() === 'credit card') {
         if (validName($('#name').val()) && validEmail($('#mail').val()) && validActivities() && validCardNumber($('#cc-num').val()) &&
             validZip($('#zip').val()) && validCVV($('#cvv').val())) {
-            return true;                                                            
+            return true;
         } else {
             validName($('#name').val());
             validEmail($('#mail').val());
@@ -448,19 +439,19 @@ const isValid = () => {
             validCardNumber($('#cc-num').val());
             validZip($('#zip').val());
             validCVV($('#cvv').val());
-            return false;                                                   
+            return false;
         }
 
-    // Credit Card is not chosen: 
-        
+        // Credit Card is not chosen: 
+
     } else {
         if (validName($('#name').val()) && validEmail($('#mail').val()) && validActivities()) {
-            return true;                                                                             
+            return true;
         } else {
             validName($('#name').val());
             validEmail($('#mail').val());
             validActivities();
-            return false;                                                                      
+            return false;
         }
     }
 }
@@ -469,15 +460,9 @@ const isValid = () => {
 
 $('form').on('submit', (e) => {
     if (isValid() === true) {
-        window.location.reload();                                                        
+        window.location.reload();
 
     } else {
-        e.preventDefault();                                                            
+        e.preventDefault();
     }
 });
-
-
-
-
-
-
